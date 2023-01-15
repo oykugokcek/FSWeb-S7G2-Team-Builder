@@ -1,22 +1,21 @@
 import React from "react";
-import { Route, useHistory } from "react-router-dom";
+import TeamMate from "./TeamMate";
+import style from "./Form.css";
 
-export default function TeamList(props) {
-  const { team } = props;
-  const history = useHistory();
-  function toMainPage() {
-    history.push("/");
-  }
-
+function TeamList({ team, onDelete, onEdit }) {
+  const renderedTeamList = team.map((person) => {
+    return <TeamMate person={person} onDelete={onDelete} onEdit={onEdit} />;
+  });
   return (
     <div>
-      <p>{team.name}</p>
-      <p>{team.email}</p>
-      <p>{team.role}</p>
-
-      <div onClick={toMainPage} className="home-button">
-        Anasayfa
+      <div className="info" id="header">
+        <div className="names">Name</div>
+        <div className="roles">Role</div>
       </div>
+
+      <p>{renderedTeamList}</p>
     </div>
   );
 }
+
+export default TeamList;

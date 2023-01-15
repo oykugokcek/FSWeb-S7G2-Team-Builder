@@ -1,29 +1,20 @@
-import React from "react";
-import { formStyle } from "./Form.css";
 import { useState } from "react";
-import TeamList from "./TeamList";
 
-function Form(props) {
-  const [teamMate, setTeamMate] = useState({
-    id: "",
-    name: "",
-    email: "",
-    role: "",
-  });
-  const { onCreate } = props;
+export default function TeamMateEdit({ person, onSubmit }) {
+  const [editingPerson, setEditingPerson] = useState(person);
 
   const handleChange = (event) => {
-    const { id, value } = event.target;
-    setTeamMate({
-      ...teamMate,
-      [id]: value,
-    });
-    console.log(teamMate);
+    setEditingPerson(event.target.value);
   };
 
-  const handleClick = (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
-    onCreate(teamMate);
+    onSubmit(
+      person.id,
+      editingPerson.name,
+      editingPerson.email,
+      editingPerson.role
+    );
   };
 
   return (
@@ -34,9 +25,9 @@ function Form(props) {
             <input
               placeholder="Name"
               id="name"
-              value={teamMate.name}
+              value={editingPerson.name}
               type="text"
-              onChange={(e) => handleChange(e)}
+              onChange={handleChange}
             />
           </label>
         </p>
@@ -45,9 +36,9 @@ function Form(props) {
             <input
               placeholder="Email"
               id="email"
-              value={teamMate.email}
+              value={editingPerson.email}
               type="text"
-              onChange={(e) => handleChange(e)}
+              onChange={handleChange}
             />
           </label>
         </p>
@@ -56,16 +47,14 @@ function Form(props) {
             <input
               placeholder="Role"
               id="role"
-              value={teamMate.role}
+              value={editingPerson.role}
               type="text"
-              onChange={(e) => handleChange(e)}
+              onChange={handleChange}
             />
           </label>
         </p>
-        <button onClick={handleClick}>Join Us!</button>
+        <button onClick={handleSubmit}>Edit</button>
       </form>
     </div>
   );
 }
-
-export default Form;

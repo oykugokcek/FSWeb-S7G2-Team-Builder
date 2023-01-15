@@ -1,40 +1,56 @@
 import React from "react";
 import Form from "./Components/Form";
-import Team from "./Components/Team";
 import TeamList from "./Components/TeamList";
-import { formStyle } from "./Components/Form.css";
+import TeamMate from "./Components/TeamMate";
 import { useState } from "react";
-import { appStyle } from "./App.css";
-import { Route } from "react-router-dom";
 
 let welcomeMessage;
 function App() {
-  const [teamMate, setTeamMate] = useState({ name: "", email: "", role: "" });
   const [team, setTeam] = useState([]);
 
-  console.log(team);
+  const createPerson = (person) => {
+    if (team.filter((item) => item.name === person.name).length === 0) {
+      const updatedTeamData = [
+        ...team,
+        {
+          id: Math.round(Math.random() * 9999),
+          name: person.name,
+          email: person.email,
+          role: person.role,
+        },
+      ];
+      setTeam(updatedTeamData);
+      console.log(team);
+    } else {
+      alert("You have already sign up!");
+    }
+  };
 
-  function handleChange(event) {
-    console.log(event);
-    setTeamMate({ ...teamMate, [event.target.id]: event.target.value });
-  }
+  const deletePersonByName = (name) => {
+    const updatedTeamData = team.filter((person) => {
+      return person.name !== name;
+    });
+    setTeam(updatedTeamData);
+  };
 
-  function handleClick(event) {
-    event.preventDefault();
-    let firstName = teamMate.name.split(" ").slice(0, -1).join(" ");
-    welcomeMessage = "Welcome " + firstName + " thank you for join us!";
-    // if (team.filter((item) => item.name === teamMate.name).length === 0) {
-    setTeam([...team, teamMate]);
-  }
+  const editPersonByName = (id, newName, newEmail, newRole) => {
+    const updatedTeamData = team.map((person) => {
+      if (person.id === id) {
+        return { ...person, name: newName, email: newEmail, role: newRole };
+      }
+    });
+    setTeam(updatedTeamData);
+  };
 
   return (
     <div className="App">
       <h1>Enter your info to sign up!</h1>
-      <Form handleChange={handleChange} handleClick={handleClick} />
-      <Team team={team} teamMate={teamMate} welcomeMessage={welcomeMessage} />
-      {/* <Route exact path="/teamlist">
-        <TeamList team={team} />
-      </Route> */}
+      <Form onCreate={createPerson} />
+      <TeamList
+        team={team}
+        onDelete={deletePersonByName}
+        onEdit={editPersonByName}
+      />
     </div>
   );
 }
